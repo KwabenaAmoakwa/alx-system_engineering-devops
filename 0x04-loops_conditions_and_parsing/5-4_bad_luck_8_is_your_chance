@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# Using a while loop to iterate over a range of numbers
+counter=1
+
+while [ $counter -le 11 ]
+do
+  if [ $counter = 4 ]; then
+    echo "bad luck"
+  if [ $counter = 8 ]; then
+    echo "good luck"
+  else
+    echo "Best School"
+  fi
+  ((counter++))
+done
