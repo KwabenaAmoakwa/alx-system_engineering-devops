@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# Using a while loop to iterate over a range of numbers
+counter=1
+
+while [ $counter -le 12 ]; do
+    echo "Hour : $counter"
+    j=1
+    while [ $j -le 59 ]; do
+        echo "$j"
+        ((j++))
+    done
+    ((counter++))
+
+done
