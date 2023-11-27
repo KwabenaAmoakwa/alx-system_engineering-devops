@@ -4,6 +4,6 @@
 for file in *; do
 	if [[ $file != .* ]]; then
 		name_after_dash=$(echo "$file" | cut -d'-' -f2-)
-		echo "- $name_after_dash"
+		echo "$name_after_dash"
 	fi
 done
