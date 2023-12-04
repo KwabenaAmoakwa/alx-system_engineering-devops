@@ -1,42 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# Displays listening ports. Includes listening sockets as well
+# + as the PID and name of the program to which each socket belongs.
 
-# Display listening ports with PID and program name
-
-echo "Active Internet connections (only servers)"
-echo "Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name"
-
-ss -tln | awk '/^LISTEN/ {print $1,$4}' | while read line
-do
-    protocol=$(echo $line | awk '{print $1}')
-    local_address=$(echo $line | awk '{print $2}')
-    state="LISTEN"
-    
-    port=$(echo $local_address | awk -F: '{print $NF}')
-    pid_program=$(lsof -i :$port -sTCP:LISTEN -n -P | awk 'NR==2 {print $2, $1}')
-    
-    echo "$protocol       $state     $local_address           $pid_program"
-done
-
-ss -uln | awk '/^UNCONN/ {print $1,$5}' | while read line
-do
-    protocol=$(echo $line | awk '{print $1}')
-    local_address=$(echo $line | awk '{print $2}')
-    
-    port=$(echo $local_address | awk -F: '{print $NF}')
-    pid_program=$(lsof -i :$port -sUDP:LISTEN -n -P | awk 'NR==2 {print $2, $1}')
-    
-    echo "$protocol       $local_address           $pid_program"
-done
-
-echo "Active UNIX domain sockets (only servers)"
-echo "Proto RefCnt Flags       Type       State         I-Node   PID/Program name    Path"
-
-ss -xl | awk '/^LISTEN/ {print $1,$6}' | while read line
-do
-    protocol=$(echo $line | awk '{print $1}')
-    inode=$(echo $line | awk '{print $2}')
-    
-    pid_program=$(lsof -U -n -P | awk -v inode="$inode" '$0 ~ inode {print $2, $1}')
-    
-    echo "$protocol     $line      $pid_program"
-done
+netstat -l --program
