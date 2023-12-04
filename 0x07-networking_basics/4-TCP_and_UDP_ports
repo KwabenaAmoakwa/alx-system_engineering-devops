@@ -5,20 +5,19 @@
 echo "Active Internet connections (only servers)"
 echo "Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name"
 
-netstat -tln | awk '/^tcp/ {print $1,$4,$NF}' | sed -e '1d' | while read line
+ss -tln | awk '/^LISTEN/ {print $1,$4}' | while read line
 do
     protocol=$(echo $line | awk '{print $1}')
     local_address=$(echo $line | awk '{print $2}')
-    state=$(echo $line | awk '{print $3}')
+    state="LISTEN"
     
-
     port=$(echo $local_address | awk -F: '{print $NF}')
     pid_program=$(lsof -i :$port -sTCP:LISTEN -n -P | awk 'NR==2 {print $2, $1}')
     
     echo "$protocol       $state     $local_address           $pid_program"
 done
 
-netstat -uln | awk '/^udp/ {print $1,$4,$NF}' | sed -e '1d' | while read line
+ss -uln | awk '/^UNCONN/ {print $1,$5}' | while read line
 do
     protocol=$(echo $line | awk '{print $1}')
     local_address=$(echo $line | awk '{print $2}')
@@ -32,11 +31,10 @@ done
 echo "Active UNIX domain sockets (only servers)"
 echo "Proto RefCnt Flags       Type       State         I-Node   PID/Program name    Path"
 
-
-netstat -lx | awk '/^unix/ {print $1,$6,$7,$8}' | sed -e '1d' | while read line
+ss -xl | awk '/^LISTEN/ {print $1,$6}' | while read line
 do
     protocol=$(echo $line | awk '{print $1}')
-    inode=$(echo $line | awk '{print $5}')
+    inode=$(echo $line | awk '{print $2}')
     
     pid_program=$(lsof -U -n -P | awk -v inode="$inode" '$0 ~ inode {print $2, $1}')
     
