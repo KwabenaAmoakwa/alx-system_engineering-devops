@@ -5,7 +5,4 @@ private_key_name="school"
 key_bits=4096
 passphrase="betty"
 
-ssh-keygen -t rsa -b $key_bits -f "$private_key_name" -N "$passphrase"
-
-echo "Your identification has been saved in $private_key_name"
-echo "Your public key has been saved in ${private_key_name}.pub"
+ssh-keygen -t rsa -b $key_bits -P "$private_key_name" -f "$passphrase"
