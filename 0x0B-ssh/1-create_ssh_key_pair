@@ -5,4 +5,4 @@ private_key_name="school"
 key_bits=4096
 passphrase="betty"
 
-ssh-keygen -t rsa -b 4096 -P "school" -f "betty"
+ssh-keygen -t rsa -b 4096 -P betty -f school
